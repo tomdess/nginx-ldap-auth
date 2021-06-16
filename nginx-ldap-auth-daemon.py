@@ -344,7 +344,7 @@ if __name__ == '__main__':
              'binddn': ('X-Ldap-BindDN', args.binddn),
              'bindpasswd': ('X-Ldap-BindPass', args.bindpw),
              'cookiename': ('X-CookieName', args.cookie),
-             'allowusers': ('X-Allow-Users', args.allowusers)
+             'allowusers': ('X-Ldap-Allow-Users', args.allowusers)
     }
     LDAPAuthHandler.set_params(auth_params)
     server = AuthHTTPServer(Listen, LDAPAuthHandler)
