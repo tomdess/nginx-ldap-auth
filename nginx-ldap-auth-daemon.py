@@ -165,7 +165,8 @@ class LDAPAuthHandler(AuthHandler):
              'template': ('X-Ldap-Template', '(cn=%(username)s)'),
              'binddn': ('X-Ldap-BindDN', ''),
              'bindpasswd': ('X-Ldap-BindPass', ''),
-             'cookiename': ('X-CookieName', '')
+             'cookiename': ('X-CookieName', ''),
+             'allowusers': ('X-Ldap-Allow-Users', '')
         }
 
     @classmethod
@@ -223,6 +224,14 @@ class LDAPAuthHandler(AuthHandler):
             # See https://www.python-ldap.org/en/latest/faq.html
             if ctx['disable_referrals'] == 'true':
                 ldap_obj.set_option(ldap.OPT_REFERRALS, 0)
+
+
+            # Allow users
+	    if ctx['allowusers'] and ctx['user'] not in [x.strip() for x in ctx['allowusers'].split(',')]:
+		    self.log_message(('user not in allowed list'))
+                    self.auth_failed(ctx, 'username not in allow list')
+		    return
+
 
             ctx['action'] = 'binding as search user'
             ldap_obj.bind_s(ctx['binddn'], ctx['bindpasswd'], ldap.AUTH_SIMPLE)
@@ -313,6 +322,8 @@ if __name__ == '__main__':
     group.add_argument('-f', '--filter', metavar='filter',
         default='(cn=%(username)s)',
         help="LDAP filter (Default: cn=%%(username)s)")
+    group.add_argument('-a', '-allow-users', metavar="USERLIST", dest="allowusers",
+        default="", help="Allowed users to auth (Default: unset)")
     # http options:
     group = parser.add_argument_group(title="HTTP options")
     group.add_argument('-R', '--realm', metavar='"Restricted Area"',
@@ -332,7 +343,8 @@ if __name__ == '__main__':
              'template': ('X-Ldap-Template', args.filter),
              'binddn': ('X-Ldap-BindDN', args.binddn),
              'bindpasswd': ('X-Ldap-BindPass', args.bindpw),
-             'cookiename': ('X-CookieName', args.cookie)
+             'cookiename': ('X-CookieName', args.cookie),
+             'allowusers': ('X-Allow-Users', args.allowusers)
     }
     LDAPAuthHandler.set_params(auth_params)
     server = AuthHTTPServer(Listen, LDAPAuthHandler)

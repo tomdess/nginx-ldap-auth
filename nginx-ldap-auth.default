@@ -1,14 +1,17 @@
-#
+# In Debian put this file in /etc/default/nginx-ldap-auth
+# 
 # these are used with systemd too
 # so please keep options names inside variables
 #
 #URL="--url ldap://example.com:389"
+#STARTTLS="--starttls true"
 #BASE="-b dc=nodomain"
 #BIND_DN="-D cn=admin,dc=nodomain"
 #BIND_PASS="-w secret"
 #COOKIE="-c nginxauth"
 #FILTER="-f (cn=%(username)s)"
 #REALM="-R 'Restricted Area'"
+#USERLIST="-a pino,lino,rino"
 
 # these are used with init scripts only
 LOG=/var/log/nginx-ldap-auth/daemon.log

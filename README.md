@@ -1,5 +1,26 @@
 # nginx-ldap-auth
 
+My custom release to define a list of allowed users to login with a new ARG switch **-a USERLIST** (comma separated list of ldap users):
+```
+ # ./nginx-ldap-auth-daemon.py --help
+ usage: nginx-ldap-auth-daemon.py [-h] [--host hostname] [-p port] [-u URL]
+                                 [-s starttls]
+                                 [--disable-referrals disable_referrals]
+                                 [-b baseDn] [-D bindDn] [-w passwd]
+                                 [-f filter] [-a USERLIST]
+                                 [-R "Restricted Area"] [-c cookiename]
+ [...]
+
+   -a USERLIST, -allow-users USERLIST
+                        Allowed users to auth (Default: unset)
+
+```
+
+
+
+**Below the original README file**
+
+
 Reference implementation of method for authenticating users on behalf of servers proxied by NGINX or NGINX Plus
 
 ## Description
